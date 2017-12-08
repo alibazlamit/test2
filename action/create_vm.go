@@ -38,7 +38,7 @@ func NewCreateVM(c client.Connector, l boshlog.Logger, r registry.Client, u bosh
 // it creates a forward tunnel to the public IP of that instance.
 //
 // Finally, it updates the agent registry with details of the new instance
-func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID,	networks oneandone.ServerIp, _ []DiskCID, env Environment) (VMCID, error) {
+func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID,	networks *oneandone.ServerIp, _ []DiskCID, env Environment) (VMCID, error) {
 
 	// Create the VM
 	name := cv.vmName()

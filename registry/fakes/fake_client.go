@@ -1,7 +1,7 @@
 package fakes
 
 import (
-	"github.com/oracle/bosh-oracle-cpi/registry"
+	"github.com/bosh-oneandone-cpi/registry"
 )
 
 // FakeClient represents a Fake BOSH Registry Client.
