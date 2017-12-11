@@ -2,41 +2,43 @@ package disks
 
 import (
 	"fmt"
+	"github.com/bosh-oneandone-cpi/oneandone/client"
+	"github.com/bosh-oneandone-cpi/oneandone/resource"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	"github.com/oracle/bosh-oracle-cpi/oci"
-	"github.com/oracle/bosh-oracle-cpi/oci/client"
-	"github.com/oracle/bosh-oracle-cpi/oci/resource"
-	"oracle/oci/core/client/blockstorage"
-	"oracle/oci/core/models"
+	"github.com/oneandone/oneandone-cloudserver-sdk-go"
 )
 
 type diskCreator struct {
 	connector client.Connector
 	logger    boshlog.Logger
-	location  resource.Location
+	vmId      string
 }
 
-func NewCreator(c client.Connector, l boshlog.Logger, loc resource.Location) Creator {
-	return &diskCreator{connector: c, logger: l, location: loc}
+func NewCreator(c client.Connector, l boshlog.Logger, vmId string) Creator {
+	return &diskCreator{connector: c, logger: l, vmId: vmId}
 }
 
-type CreatorFactory func(client.Connector, boshlog.Logger, resource.Location) Creator
+type CreatorFactory func(client.Connector, boshlog.Logger, string) Creator
 
-func (dc *diskCreator) CreateVolume(name string, sizeinMB int64) (*resource.Volume, error) {
+func (dc *diskCreator) CreateVolume(name string, sizeinMB int, vmId string) (*resource.Volume, error) {
 
-	ad := dc.location.AvailabilityDomain()
-	cid := dc.location.CompartmentID()
-	details := models.CreateVolumeDetails{AvailabilityDomain: &ad, CompartmentID: &cid,
-		DisplayName: name, SizeInMBs: sizeinMB}
-
-	p := blockstorage.NewCreateVolumeParams().WithCreateVolumeDetails(&details)
-
-	res, err := dc.connector.CoreSevice().Blockstorage.CreateVolume(p)
-
-	if err != nil {
-		return nil, fmt.Errorf("Error creating volume. Reason: %s", oci.CoreModelErrorMsg(err))
+	req := oneandone.ServerHdds{
+		Hdds: []oneandone.Hdd{
+			oneandone.Hdd{
+				Size:   sizeinMB,
+				IsMain: false,
+			},
+		},
 	}
 
+	res, err := dc.connector.Client().AddServerHdds(vmId, &req)
+
+	if err != nil {
+		return nil, fmt.Errorf("Error creating volume. Reason: %s", err)
+	}
+
+	var volume *resource.Volume
+	dc.connector.Client().WaitForState(res,"POWERED_ON",10,90)
 	var volume *resource.Volume
 	if err = dc.waitUntilProvisioned(res.Payload, func(v *models.Volume) {
 		volume = resource.NewVolume(*v.DisplayName, *v.ID)

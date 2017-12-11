@@ -3,7 +3,7 @@ package disks
 import (
 	"errors"
 	"fmt"
-	"github.com/oracle/bosh-oracle-cpi/oci/client"
+	"github.com/bosh-oneandone-cpi/oneandone/client"
 	"oracle/oci/core/client/blockstorage"
 	"oracle/oci/core/models"
 	"time"

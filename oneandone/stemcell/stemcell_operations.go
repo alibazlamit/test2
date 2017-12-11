@@ -2,9 +2,9 @@ package stemcell
 
 import (
 	"fmt"
-	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	"github.com/bosh-oneandone-cpi/oneandone/client"
-	"github.com/bosh-softlayer-cpi-release/src/bosh-softlayer-cpi/softlayer/pool/models"
+	boshlog "github.com/cloudfoundry/bosh-utils/logger"
+	"github.com/oneandone/oneandone-cloudserver-sdk-go"
 )
 
 type stemcellOperations struct {
@@ -14,46 +14,42 @@ type stemcellOperations struct {
 
 func (so stemcellOperations) DeleteStemcell(stemcellID string) error {
 
-	cs := so.connect()
-	p := compute.NewDeleteImageParams().WithImageID(stemcellID)
-	_, err := cs.Compute.DeleteImage(p)
+	cs := so.connector.Client()
+	_, err := cs.DeleteImage(stemcellID)
 	return err
 
 }
 
 func (so stemcellOperations) CreateStemcell(sourceURI string, customImageName string) (stemcellID string, err error) {
 
-	cid := so.connector.CompartmentId()
-
-	ci := models.CreateImageDetails{
-		CompartmentID: &cid,
-		DisplayName:   customImageName,
-		ImageSourceDetails: &models.ImageSourceViaObjectStorageURIDetails{
-			SourceURI: &sourceURI,
-		},
+	cs := so.connector.Client()
+	req := oneandone.ImageRequest{
+		Name:      customImageName,
+		Source:    "iso",
+		Url:       sourceURI,
+		Frequency: "ONCE",
 	}
 
-	cs := so.connector.CoreSevice()
-	p := compute.NewCreateImageParams().WithCreateImageDetails(&ci)
-	ok, err := cs.Compute.CreateImage(p)
+	_, ok, err := cs.CreateImage(&req)
 
 	if err != nil {
-		return "", fmt.Errorf("Unable to create image from source %s. Reason: %s", sourceURI, oci.CoreModelErrorMsg(err))
+		return "", fmt.Errorf("Unable to create image from source %s. Reason: %s", sourceURI, err)
 	}
 
-	var image *models.Image
+	var image *oneandone.Image
 	waiter := imageAvailableWaiter{
 		connector: so.connector,
 		logger:    so.logger,
-		imageProvisionedHandler: func(i *models.Image) {
+		imageProvisionedHandler: func(i *oneandone.Image) {
 			image = i
 		},
 	}
 
-	if err = waiter.WaitFor(ok.Payload); err != nil {
+	if err = waiter.WaitFor(ok); err != nil {
 		return "", err
 	}
-	return *image.ID, nil
+
+	return image.Id, nil
 }
 
 func (so stemcellOperations) FindStemcell(imageOCID string) (stemcellID string, err error) {
@@ -63,15 +59,14 @@ func (so stemcellOperations) FindStemcell(imageOCID string) (stemcellID string, 
 	if err != nil {
 		return "", err
 	}
-	return *image.ID, nil
+	return image.Id, nil
 }
 
-func queryImage(connector client.Connector, imageOCID string) (*models.Image, error) {
+func queryImage(connector client.Connector, imageOCID string) (*oneandone.Image, error) {
 
-	p := compute.NewGetImageParams().WithImageID(imageOCID)
-	image, err := connector.CoreSevice().Compute.GetImage(p)
+	image, err := connector.Client().GetImage(imageOCID)
 	if err != nil {
-		return nil, fmt.Errorf("Error finding image %s. Reason:%s", imageOCID, oci.CoreModelErrorMsg(err))
+		return nil, fmt.Errorf("Error finding image %s. Reason:%s", imageOCID, err)
 	}
-	return image.Payload, nil
+	return image, nil
 }

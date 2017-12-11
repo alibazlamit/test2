@@ -2,7 +2,7 @@ package stemcell
 
 import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
-	"github.com/oracle/bosh-oracle-cpi/oci/client"
+	"github.com/bosh-oneandone-cpi/oneandone/client"
 )
 
 const stemCellLogTag = "OAOStemcell"

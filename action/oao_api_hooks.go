@@ -5,6 +5,8 @@ import (
 	"github.com/bosh-oneandone-cpi/oneandone/client"
 	"github.com/bosh-oneandone-cpi/oneandone/stemcell"
 	"github.com/bosh-oneandone-cpi/oneandone/vm"
+	"github.com/bosh-oneandone-cpi/oneandone/disks"
+	"github.com/bosh-oneandone-cpi/oneandone/resource"
 )
 
 var (
@@ -50,12 +52,12 @@ func newVMUpdater(c client.Connector, l boshlog.Logger) vm.Updater {
 	return vmUpdaterFactory(c, l)
 }
 
-func newDiskCreator(c client.Connector, l boshlog.Logger, loc resource.Location) disks.Creator {
-	return diskCreatorFactory(c, l, loc)
+func newDiskCreator(c client.Connector, l boshlog.Logger) disks.Creator {
+	return diskCreatorFactory(c, l)
 }
 
-func newDiskFinder(c client.Connector, l boshlog.Logger, loc resource.Location) disks.Finder {
-	return diskFinderFactory(c, l, loc)
+func newDiskFinder(c client.Connector, l boshlog.Logger) disks.Finder {
+	return diskFinderFactory(c, l)
 }
 
 func newDiskTerminator(c client.Connector, l boshlog.Logger) disks.Terminator {

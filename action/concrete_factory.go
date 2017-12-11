@@ -31,8 +31,8 @@ func NewConcreteFactory(
 		connector: connector,
 		availableActions: map[string]Action{
 			// Image management
-			//"create_stemcell": NewCreateStemcell(connector, logger),
-			//"delete_stemcell": NewDeleteStemcell(connector, logger),
+			"create_stemcell": NewCreateStemcell(connector, logger),
+			"delete_stemcell": NewDeleteStemcell(connector, logger),
 
 			// VM management
 			"create_vm":       NewCreateVM(connector, logger, registryClient, uuidGen),
