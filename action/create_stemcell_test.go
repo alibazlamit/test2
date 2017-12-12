@@ -80,7 +80,6 @@ var _ = Describe("CreateStemcell", func() {
 				_, err = createStemcell.Run("", cloudProps)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(creator.CreateStemcellCalledWithImageName).To(ContainSubstring("fake-image-name"))
-				Expect(creator.CreateStemcellCalledWithImageName).To(ContainSubstring("fake-image-version"))
 
 			})
 

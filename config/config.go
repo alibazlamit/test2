@@ -6,8 +6,6 @@ import (
 
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshsys "github.com/cloudfoundry/bosh-utils/system"
-
-	"github.com/bosh-oneandone-cpi/action"
 )
 
 type Config struct {
@@ -15,8 +13,8 @@ type Config struct {
 }
 
 type CloudConfig struct {
-	Plugin     string                   `json:"plugin"`
-	Properties action.VMCloudProperties `json:"properties"`
+	Plugin     string        `json:"plugin"`
+	Properties OAOProperties `json:"properties"`
 }
 
 func NewConfigFromPath(path string, fs boshsys.FileSystem) (Config, error) {

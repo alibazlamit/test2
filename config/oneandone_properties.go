@@ -3,15 +3,15 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 
-	"oracle/oracle-iaas-go.git/transport"
+	"github.com/bosh-oneandone-cpi/registry"
 )
 
 // OAOProperties contains the properties for configuring
 // BOSH CPI for Oneandone Cloud Infrastructure
 type OAOProperties struct {
+	Agent    registry.AgentOptions
+	Registry registry.ClientOptions
 	// Tenancy under which the resources are provisioned
 	//Tenancy string `json:"tenancy"`
 	//
@@ -74,6 +74,7 @@ func (b OAOProperties) Validate() error {
 	//	return err
 	//}
 	//return validateFilePaths([]string{b.APIKeyFile})
+	return validateFilePaths([]string{})
 }
 
 func isAnyEmpty(attributes map[string]string) error {
@@ -105,17 +106,17 @@ func newSanitizedConfig(configFullPath string, b OAOProperties) OAOProperties {
 	//dir := filepath.Dir(configFullPath)
 
 	return OAOProperties{
-		//Tenancy:           b.Tenancy,
-		//User:              b.User,
-		//CompartmentID:     b.CompartmentID,
-		//Region:            b.Region,
-		//Fingerprint:       b.Fingerprint,
-		//APIKeyFile:        filepath.Join(dir, filepath.Base(b.APIKeyFile)),
-		//CpiKeyFile:        filepath.Join(dir, filepath.Base(b.CpiKeyFile)),
-		//CpiUser:           b.CpiUser,
-		//UsePublicIPForSSH: b.UsePublicIPForSSH,
-		//AuthorizedKeys:    b.AuthorizedKeys,
-		//SSHTunnel:         b.SSHTunnel,
+	//Tenancy:           b.Tenancy,
+	//User:              b.User,
+	//CompartmentID:     b.CompartmentID,
+	//Region:            b.Region,
+	//Fingerprint:       b.Fingerprint,
+	//APIKeyFile:        filepath.Join(dir, filepath.Base(b.APIKeyFile)),
+	//CpiKeyFile:        filepath.Join(dir, filepath.Base(b.CpiKeyFile)),
+	//CpiUser:           b.CpiUser,
+	//UsePublicIPForSSH: b.UsePublicIPForSSH,
+	//AuthorizedKeys:    b.AuthorizedKeys,
+	//SSHTunnel:         b.SSHTunnel,
 	}
 }
 

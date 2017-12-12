@@ -6,18 +6,18 @@ import (
 
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
-	. "github.com/onsi/gomega"
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	"github.com/bosh-oneandone-cpi/oneandone/client"
 	"github.com/bosh-oneandone-cpi/oneandone/vm"
 	"github.com/bosh-oneandone-cpi/registry"
 
-	registryfakes "github.com/bosh-oneandone-cpi/registry/fakes"
-	vmfakes "github.com/bosh-oneandone-cpi/oneandone/vm/fakes"
-	fakeuuid "github.com/cloudfoundry/bosh-utils/uuid/fakes"
 	clientfakes "github.com/bosh-oneandone-cpi/oneandone/client/fakes"
-
+	"github.com/bosh-oneandone-cpi/oneandone/resource"
+	vmfakes "github.com/bosh-oneandone-cpi/oneandone/vm/fakes"
+	registryfakes "github.com/bosh-oneandone-cpi/registry/fakes"
+	fakeuuid "github.com/cloudfoundry/bosh-utils/uuid/fakes"
 )
 
 var _ = Describe("CreateVM", func() {
@@ -61,8 +61,10 @@ var _ = Describe("CreateVM", func() {
 			Mbus: "http://fake-mbus",
 			Blobstore: registry.BlobstoreOptions{
 				Provider: "fake-blobstore-type",
+				Options:  nil,
 			},
 		}
+		connector.AgentOptionsResult = agentOptions
 		createVM = NewCreateVM(connector, logger, registryClient, uuidGen)
 	})
 	AfterEach(func() { resetAllFactories() })
@@ -71,16 +73,18 @@ var _ = Describe("CreateVM", func() {
 		BeforeEach(func() {
 
 			cloudProps = VMCloudProperties{
-				Cores:1,
-				Ram:4,
-				DiskSize:30,
-				Name:"test",
+				Cores:      1,
+				Ram:        4,
+				DiskSize:   30,
+				Name:       "test",
+				Datacenter: "fake-dc",
 			}
 		})
 		Context("when no errors in vm creation", func() {
 			BeforeEach(func() {
 				creator = &vmfakes.FakeVMCreator{
-					CreateInstanceError: nil,
+					CreateInstanceResult: resource.NewInstance("fake-ocid"),
+					CreateInstanceError:  nil,
 				}
 			})
 			It("creates the vm", func() {
@@ -98,6 +102,7 @@ var _ = Describe("CreateVM", func() {
 					AgentID: "fake-agent-id",
 					Blobstore: registry.BlobstoreSettings{
 						Provider: "fake-blobstore-type",
+						Options:  nil,
 					},
 					Disks: registry.DisksSettings{
 						System:     "/dev/sda",
@@ -105,18 +110,6 @@ var _ = Describe("CreateVM", func() {
 						Persistent: map[string]registry.PersistentSettings{},
 					},
 					Mbus: "http://fake-mbus",
-					Networks: registry.NetworksSettings{
-						"fake-network-name": registry.NetworkSetting{
-							Type:          "manual",
-							IP:            "10.0.0.X",
-							Gateway:       "fake-network-gateway",
-							Netmask:       "fake-network-netmask",
-							DNS:           []string{"fake-network-dns"},
-							UseDHCP:       true,
-							Default:       []string{"fake-network-default"},
-							Preconfigured: true,
-						},
-					},
 					VM: registry.VMSettings{
 						Name: fmt.Sprintf("bosh-%s", uuidGen.GeneratedUUID),
 					},

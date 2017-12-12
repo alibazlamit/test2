@@ -59,9 +59,10 @@ func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID,cloudProps VMClou
 		return "", bosherr.WrapError(err, "Error launching new instance")
 	}
 
-	//if err := cv.updateRegistry(agentID, instance.ID(), name, agentNetworks, env); err != nil {
-	//	return "", err
-	//}
+	//TODO: add agent networks
+	if err := cv.updateRegistry(agentID, instance.ID(), name, nil, env); err != nil {
+		return "", err
+	}
 	return VMCID(instance.ID()), nil
 }
 

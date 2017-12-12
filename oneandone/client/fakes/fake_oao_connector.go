@@ -17,7 +17,6 @@ func (fc *FakeConnector) Client() *cclient.API {
 	return nil
 }
 
-
 func (fc *FakeConnector) AuthorizedKeys() []string {
 	return []string{"ssh-rsa-fake"}
 }

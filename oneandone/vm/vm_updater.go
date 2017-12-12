@@ -25,5 +25,7 @@ func (u *updater) UpdateInstanceName(instanceID string, name string) error {
 	_, err := u.connector.Client().RenameServer(instanceID, name, name)
 	if err != nil {
 		//todo: log error
+		return err
 	}
+	return nil
 }

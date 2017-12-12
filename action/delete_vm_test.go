@@ -7,13 +7,13 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/bosh-oneandone-cpi/oneandone/client"
-	"github.com/bosh-oneandone-cpi/oneandone/disks"
-	"github.com/bosh-oneandone-cpi/oneandone/resource"
+	//"github.com/bosh-oneandone-cpi/oneandone/disks"
+	//"github.com/bosh-oneandone-cpi/oneandone/resource"
 	"github.com/bosh-oneandone-cpi/oneandone/vm"
 
 	"errors"
 	clientfakes "github.com/bosh-oneandone-cpi/oneandone/client/fakes"
-	diskfakes "github.com/bosh-oneandone-cpi/oneandone/disks/fakes"
+	//diskfakes "github.com/bosh-oneandone-cpi/oneandone/disks/fakes"
 	vmfakes "github.com/bosh-oneandone-cpi/oneandone/vm/fakes"
 	registryfakes "github.com/bosh-oneandone-cpi/registry/fakes"
 )
@@ -27,8 +27,8 @@ var _ = Describe("DeleteVM", func() {
 		terminator     *vmfakes.FakeVMTerminator
 		finder         *vmfakes.FakeVMFinder
 
-		diskFinder       *diskfakes.FakeDiskFinder
-		attacherDetacher *diskfakes.FakeAttacherDetacher
+		//diskFinder       *diskfakes.FakeDiskFinder
+		//attacherDetacher *diskfakes.FakeAttacherDetacher
 
 		deleteVM DeleteVM
 	)
@@ -45,15 +45,15 @@ var _ = Describe("DeleteVM", func() {
 			return finder
 		})
 
-		diskFinder = &diskfakes.FakeDiskFinder{}
-		installDiskFinderFactory(func(c client.Connector, l boshlog.Logger, loc resource.Location) disks.Finder {
-			return diskFinder
-		})
-
-		attacherDetacher = &diskfakes.FakeAttacherDetacher{}
-		installInstanceAttacherDetacherFactory(func(in *resource.Instance, c client.Connector, l boshlog.Logger) (disks.AttacherDetacher, error) {
-			return attacherDetacher, nil
-		})
+		//diskFinder = &diskfakes.FakeDiskFinder{}
+		//installDiskFinderFactory(func(c client.Connector, l boshlog.Logger, loc resource.Location) disks.Finder {
+		//	return diskFinder
+		//})
+		//
+		//attacherDetacher = &diskfakes.FakeAttacherDetacher{}
+		//installInstanceAttacherDetacherFactory(func(in *resource.Instance, c client.Connector, l boshlog.Logger) (disks.AttacherDetacher, error) {
+		//	return attacherDetacher, nil
+		//})
 
 		connector = &clientfakes.FakeConnector{}
 		logger = boshlog.NewLogger(boshlog.LevelNone)
@@ -67,7 +67,7 @@ var _ = Describe("DeleteVM", func() {
 		It("detaches any attached volumes, deletes the given instance, and updates the registry", func() {
 			_, err = deleteVM.Run("fake-ocid")
 			Expect(err).NotTo(HaveOccurred())
-			Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
+			//Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
 			Expect(terminator.TerminateInstanceCalled).To(BeTrue())
 			Expect(terminator.TerminatedInstance).To(Equal("fake-ocid"))
 			Expect(registryClient.DeleteCalled).To(BeTrue())
@@ -88,18 +88,18 @@ var _ = Describe("DeleteVM", func() {
 			_, err = deleteVM.Run("fake-ocid")
 			Expect(err).To(HaveOccurred())
 			Expect(err.Error()).To(ContainSubstring("fake-registry-client-error"))
-			Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
+			//Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
 			Expect(terminator.TerminateInstanceCalled).To(BeTrue())
 			Expect(registryClient.DeleteCalled).To(BeTrue())
 		})
 		Context("When disk findattachment or detachment fails", func() {
 			It("Ignores those errors", func() {
 
-				diskFinder.FindAllAttachedError = errors.New("fake-findallattachments-error")
+				//diskFinder.FindAllAttachedError = errors.New("fake-findallattachments-error")
 
 				_, err = deleteVM.Run("fake-ocid")
 				Expect(err).ToNot(HaveOccurred())
-				Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
+				//Expect(diskFinder.FindAllAttachedVolumesCalled).To(BeTrue())
 				Expect(terminator.TerminateInstanceCalled).To(BeTrue())
 				Expect(registryClient.DeleteCalled).To(BeTrue())
 			})
