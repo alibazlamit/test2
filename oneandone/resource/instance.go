@@ -46,11 +46,11 @@ func (in *Instance) queryIPs(c client.Connector, l boshlog.Logger) error {
 
 	var public []string
 	var private []string
-	public, private, err = in.location.instanceIPs(c, in.ocid)
-	if err != nil {
-		l.Debug(logTag, "Error finding IPs %s", err)
-		return err
-	}
+	//public, private, err = in.location.instanceIPs(c, in.ocid)
+	//if err != nil {
+	//	l.Debug(logTag, "Error finding IPs %s", err)
+	//	return err
+	//}
 
 	in.publicIPs = make([]string, len(public))
 	in.privateIPs = make([]string, len(private))

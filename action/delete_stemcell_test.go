@@ -7,11 +7,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	clientfakes "github.com/oracle/bosh-oracle-cpi/oci/client/fakes"
-	stemcellfakes "github.com/oracle/bosh-oracle-cpi/oci/stemcell/fakes"
+	clientfakes "github.com/bosh-oneandone-cpi/oneandone/client/fakes"
+	stemcellfakes "github.com/bosh-oneandone-cpi/oneandone/stemcell/fakes"
 
-	"github.com/oracle/bosh-oracle-cpi/oci/client"
-	"github.com/oracle/bosh-oracle-cpi/oci/stemcell"
+	"github.com/bosh-oneandone-cpi/oneandone/client"
+	"github.com/bosh-oneandone-cpi/oneandone/stemcell"
 )
 
 var _ = Describe("DeleteStemcell", func() {

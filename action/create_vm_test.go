@@ -6,7 +6,6 @@ import (
 
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
-	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/bosh-oneandone-cpi/oneandone/client"

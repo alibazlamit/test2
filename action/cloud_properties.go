@@ -19,3 +19,17 @@ type VMCloudProperties struct {
 	DiskSize   int     `json:"diskSize,omitempty"`
 	Ram        float32 `json:"ram,omitempty"`
 }
+
+func (o VMCloudProperties) Validate() error {
+	//err := o.Agent.Validate()
+	//if err != nil {
+	//	return bosherr.WrapError(err, "Validating Agent configuration")
+	//}
+	//
+	//err = o.Softlayer.Validate()
+	//if err != nil {
+	//	return bosherr.WrapError(err, "Validating SoftLayer configuration")
+	//}
+
+	return nil
+}

@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	logTag                 = "OAOConnector"
-	apiBasePath            = "https://cloudpanel-api.1and1.com/v1"
+	logTag      = "OAOConnector"
+	apiBasePath = "https://cloudpanel-api.1and1.com/v1"
 )
 
 type Connector interface {
@@ -56,7 +56,7 @@ func (c *connectorImpl) createServiceClients(token string, basePath string) erro
 
 	api := cclient.New(token, basePath)
 
-	_, err:= c.client.ListDatacenters()
+	_, err := c.client.ListDatacenters()
 	if err != nil {
 		c.logger.Error(logTag, "Error connecting to the API %s. Reason: %v", apiBasePath, err)
 		return err
@@ -64,6 +64,26 @@ func (c *connectorImpl) createServiceClients(token string, basePath string) erro
 
 	c.client = api
 	return nil
+}
+
+func (c *connectorImpl) AuthorizedKeys() []string {
+	//keys := []string{}
+	//userKey, err := c.config.Properties.OCI.UserSSHPublicKeyContent()
+	//if err != nil {
+	//	c.logger.Debug(logTag, "Ignored error while getting user key %v", err)
+	//} else {
+	//	keys = append(keys, userKey)
+	//}
+	//
+	//cpiKey, err := c.config.Properties.OCI.CpiSSHPublicKeyContent()
+	//if err != nil {
+	//	c.logger.Debug(logTag, "Ignored error while getting cpi key %v", err)
+	//} else {
+	//	keys = append(keys, cpiKey)
+	//
+	//}
+	//return keys
+	return []string{}
 }
 
 func (c *connectorImpl) createCoreServiceClient() {

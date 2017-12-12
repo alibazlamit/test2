@@ -2,8 +2,8 @@ package vm
 
 import (
 	"encoding/json"
-	"github.com/oracle/bosh-oracle-cpi/registry"
 	"strings"
+	"github.com/bosh-oneandone-cpi/registry"
 )
 
 // WARNING:
