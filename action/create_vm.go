@@ -2,10 +2,10 @@ package action
 
 import (
 	"fmt"
-	"time"
 	bosherr "github.com/cloudfoundry/bosh-utils/errors"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshuuid "github.com/cloudfoundry/bosh-utils/uuid"
+	"time"
 
 	"github.com/bosh-oneandone-cpi/oneandone/client"
 	"github.com/bosh-oneandone-cpi/registry"
@@ -28,26 +28,21 @@ func NewCreateVM(c client.Connector, l boshlog.Logger, r registry.Client, u bosh
 	return CreateVM{connector: c, logger: l, registry: r, uuidGen: u}
 }
 
-// Run creates an instance for the given configuration in OCI.
-//
-// If the instance is configured to be created in a manual network it assigns the
-// given private IP to that instance.
-//
-// For dynamic network where the instance is not assigned an IP,
-// it queries the IPs assigned to the new instance. In addition, if a SSHTunnel is configured
-// it creates a forward tunnel to the public IP of that instance.
-//
-// Finally, it updates the agent registry with details of the new instance
-func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID,	networks *oneandone.ServerIp, _ []DiskCID, env Environment) (VMCID, error) {
+func (cv CreateVM) Run(agentID string, stemcellCID StemcellCID,cloudProps VMCloudProperties, networks *oneandone.ServerIp, env Environment) (VMCID, error) {
 
 	// Create the VM
 	name := cv.vmName()
 	creator := newVMCreator(cv.connector, cv.logger)
 
 	icfg := vm.InstanceConfiguration{
-		Name:    name,
-		ImageId: string(stemcellCID),
+		Name:     name,
+		ImageId:  string(stemcellCID),
+		Location: cloudProps.Datacenter,
+		Ram:      cloudProps.Ram,
+		DiskSize: cloudProps.DiskSize,
+		Cores:    cloudProps.Cores,
 	}
+
 	metadata := vm.InstanceMetadata{
 		vm.NewSSHKeys(cv.connector.AuthorizedKeys()),
 		vm.NewUserData(name, cv.connector.AgentRegistryEndpoint(),

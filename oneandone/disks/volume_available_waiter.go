@@ -3,13 +3,13 @@ package disks
 import (
 	"errors"
 	"fmt"
-	"github.com/bosh-oneandone-cpi/oneandone/client"
 	"oracle/oci/core/client/blockstorage"
 	"oracle/oci/core/models"
 	"time"
 
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	boshretry "github.com/cloudfoundry/bosh-utils/retrystrategy"
+	"github.com/bosh-oneandone-cpi-release/src/bosh-oneandone-cpi/oneandone/client"
 )
 
 type volumeAvailableWaiter struct {

@@ -2,8 +2,6 @@ package disks
 
 import (
 	"fmt"
-	"github.com/bosh-oneandone-cpi/oneandone/client"
-	"github.com/bosh-oneandone-cpi/oneandone/resource"
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 	"github.com/oneandone/oneandone-cloudserver-sdk-go"
 )

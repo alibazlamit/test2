@@ -15,9 +15,9 @@ type InstanceConfiguration struct {
 	ServerIp     string
 	Location     string
 	SecondaryIps []string
-	cores        int
-	diskSize     int
-	ram          float32
+	Cores        int
+	DiskSize     int
+	Ram          float32
 }
 
 type Creator interface {
@@ -29,13 +29,10 @@ type CreatorFactory func(client.Connector, boshlog.Logger) Creator
 type creator struct {
 	connector client.Connector
 	logger    boshlog.Logger
-	location  string
 }
 
 func NewCreator(c client.Connector, l boshlog.Logger) Creator {
-	return &creator{connector: c, logger: l,
-		location: "us/las",
-	}
+	return &creator{connector: c, logger: l}
 }
 
 func (cv *creator) CreateInstance(icfg InstanceConfiguration,
@@ -51,17 +48,18 @@ func (cv *creator) launchInstance(icfg InstanceConfiguration, md InstanceMetadat
 	req := oneandone.ServerRequest{
 		Name: icfg.Name,
 		Hardware: oneandone.Hardware{
-			Ram:               icfg.ram,
-			Vcores:            icfg.cores,
+			Ram:               icfg.Ram,
+			Vcores:            icfg.Cores,
 			CoresPerProcessor: 1,
 			Hdds: []oneandone.Hdd{
 				oneandone.Hdd{
-					Size:   icfg.diskSize,
+					Size:   icfg.DiskSize,
 					IsMain: true,
 				},
 			},
 		},
-		ApplianceId: icfg.ImageId,
+		DatacenterId: icfg.Location,
+		ApplianceId:  icfg.ImageId,
 	}
 	_, res, err := cv.connector.Client().CreateServer(&req)
 	if err != nil {

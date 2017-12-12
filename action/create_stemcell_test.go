@@ -47,7 +47,7 @@ var _ = Describe("CreateStemcell", func() {
 		Context("When called with image-ocid property set", func() {
 			BeforeEach(func() {
 				cloudProps = StemcellCloudProperties{
-					ImageOCID: "fake-image-ocid",
+					ImageID: "fake-image-ocid",
 				}
 			})
 			It("returns an upgrade stemcell error", func() {
@@ -62,7 +62,6 @@ var _ = Describe("CreateStemcell", func() {
 			BeforeEach(func() {
 				cloudProps = StemcellCloudProperties{
 					Name:           "fake-image-name",
-					Version:        "fake-image-version",
 					ImageSourceURL: "fake-image-source-url",
 				}
 			})

@@ -25,12 +25,12 @@ func (cs CreateStemcell) Run(_ string, cloudProps StemcellCloudProperties) (Stem
 	if cloudProps.ImageSourceURL == "" {
 		return "", bosherr.Error("ImageSourceURL must be specified in the stemcell manifest")
 	}
-	if cloudProps.ImageOCID != "" {
-		return "", bosherr.Error("Image OCID light stemcells are not supported anymore. Please use a newer light stemcell")
+	if cloudProps.ImageID != "" {
+		return "", bosherr.Error("Image Id must be specified in the manifest")
 	}
 
 	c := newStemcellCreator(cs.connector, cs.logger)
-	id, err := c.CreateStemcell(cloudProps.ImageSourceURL, cloudProps.Name+"-"+cloudProps.Version)
+	id, err := c.CreateStemcell(cloudProps.ImageSourceURL, cloudProps.Name)
 	if err != nil {
 		return "", bosherr.WrapError(err, "Error creating stemcell")
 	}
