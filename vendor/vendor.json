@@ -3,6 +3,24 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "FnR1zvUvK6aui2XELTqvuhY/T4g=",
+			"path": "github.com/cloudfoundry/bosh-utils/errors",
+			"revision": "1a26ad52ff67437229527c43d17254e2a9dffcc6",
+			"revisionTime": "2017-12-11T23:38:08Z"
+		},
+		{
+			"checksumSHA1": "zpRW4kVs54WBTl8qsy9b46E1n2Y=",
+			"path": "github.com/cloudfoundry/bosh-utils/logger",
+			"revision": "1a26ad52ff67437229527c43d17254e2a9dffcc6",
+			"revisionTime": "2017-12-11T23:38:08Z"
+		},
+		{
+			"checksumSHA1": "VNtWCzo6OSPhIXxzBHiedw5kVAQ=",
+			"path": "github.com/cloudfoundry/bosh-utils/uuid/fakes",
+			"revision": "1a26ad52ff67437229527c43d17254e2a9dffcc6",
+			"revisionTime": "2017-12-11T23:38:08Z"
+		},
+		{
 			"checksumSHA1": "8ORniFKvZQY/Q2Iy+l6ip0dEOG0=",
 			"path": "github.com/oneandone/oneandone-cloudserver-sdk-go",
 			"revision": "474e95802ccb9ae83b1969ef51b0ab545f51d4c8",

@@ -7,14 +7,17 @@ import (
 	boshlog "github.com/cloudfoundry/bosh-utils/logger"
 
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/ginkgo"
 
 	"github.com/bosh-oneandone-cpi/oneandone/client"
-	clientfakes "github.com/bosh-oneandone-cpi/oneandone/client/fakes"
 	"github.com/bosh-oneandone-cpi/oneandone/vm"
-	vmfakes "github.com/bosh-oneandone-cpi/oneandone/vm/fakes"
 	"github.com/bosh-oneandone-cpi/registry"
+
 	registryfakes "github.com/bosh-oneandone-cpi/registry/fakes"
+	vmfakes "github.com/bosh-oneandone-cpi/oneandone/vm/fakes"
 	fakeuuid "github.com/cloudfoundry/bosh-utils/uuid/fakes"
+	clientfakes "github.com/bosh-oneandone-cpi/oneandone/client/fakes"
+
 )
 
 var _ = Describe("CreateVM", func() {
